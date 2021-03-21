@@ -1,24 +1,240 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Hello World</title>
-  <link rel="manifest" href="/manifest.json">
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="icon" href="favicon.ico" type="image/x-icon" />
-  <link rel="apple-touch-icon" href="images/hello-icon-152.png">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="white"/>
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="Hello World">
-  <meta name="msapplication-TileImage" content="images/hello-icon-144.png">
-  <meta name="msapplication-TileColor" content="#FFFFFF">
+    <meta charset="utf-8">
+    <title>Hello World</title>
+    <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="images/hello-icon-152.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="white" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Hello World">
+    <meta name="msapplication-TileImage" content="images/hello-icon-144.png">
+    <meta name="msapplication-TileColor" content="#FFFFFF">
+
+
+
+
+    <style>
+
+        /* Swipe 2 required styles */
+
+        .swipe {
+            overflow: hidden;
+            visibility: hidden;
+            position: relative;
+            height:80%;
+            background-color:darkmagenta;
+        }
+
+        .swipe-wrap {
+            overflow: hidden;
+            position: relative;
+            height:90%;
+            background-color: black;
+        }
+
+            .swipe-wrap > div {
+                float: left;
+                width: 100%;
+                height: 50%;
+                position: relative;
+
+                background-color:white;
+            }
+
+        /* END required styles */
+
+    </style>
+
+
+
 </head>
 <body class="fullscreen">
-  <div class="container">
-    <h1 class="title">Hello World!</h1>
-  </div>
-  <script src="js/main.js"></script>
-</body>
-</html>
+    <div id="filter" class="volledig filter" onclick="menu_Onderwerpen(this)" style="z-index:1000; display:none; background-color: rgba(150, 150, 150, 0.8)"></div>
+    <div id="main" class="volledig container">
+        <div id="MZB_Home" class="volledig module">
+            <div class="volledig logobalk">
+                LOGOBALK
+            </div>
+            <div id="startpagina" class="volledig pagina">
+                <div class="volledig navigatiebalk">
+                    <button id="TESTJE" onclick="menu_Onderwerpen(this)">...</button>
+                    NAVIGATIEBALK
+                </div>
+                <div class="volledig content">CONTENT</div>
+                <div class="volledig voetbalk">VOETBALK</div>
+            </div>
+            <div id="actuelepagina" class="volledig pagina" style="left: 10000px">
+                <div class="volledig navigatiebalk">
+                    <button id="TESTJE" onclick="menu_Onderwerpen(this)">...</button>
+                    NAVIGATIEBALK
+                </div>
+                <div class="volledig content" style="background-color:white">CONTENT</div>
+                <div class="volledig voetbalk">VOETBALK</div>
+            </div>
+            <div id="menuschuif" class="volledig menuschuif" style="z-index:1001; background-color:goldenrod;width:500px; left: -500px">
+                <p onclick="menu_Onderwerpen(this)">X</p>
+                <div id="menuschuifContent" class="volledig" style="top:2em"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function menu_Onderwerpen(el) {
+            menuBreedte = document.getElementById("menuschuif").style.width.split("px")[0]
+            // wil gaan toggelen dus eerst kijken of links < 0 is
+            if (document.getElementById("menuschuif").style.left.split("px")[0] < 0) {
+                // Dan moet eerst de juiste vulling worden ingevoegd; TODO voorlopig default
+                document.getElementById("menuschuifContent").innerHTML = document.getElementById("menu_1").outerHTML;
+                links = -menuBreedte;  //TODO nog uitlezen uit menuschuif-breedte
+                let timer = setInterval(function () {
+                    if (links > -1) clearInterval(timer);
+                    else {
+                        links += menuBreedte / 8;
+                        document.getElementById("menuschuif").style.left = links + "px";
+                    }
+                }, 20)
+                document.getElementById("filter").style.display = "block";
+            }
+            else {
+                links = 0;
+                let timer = setInterval(function () {
+                    if (links < (-menuBreedte - 1)) clearInterval(timer);
+                    else {
+                        links -= menuBreedte / 8;
+                        document.getElementById("menuschuif").style.left = links + "px";
+                    }
+                }, 20)
+                document.getElementById("filter").style.display = "none";
+            }
+            //// eerst uitzoeken welke menulijst
+            //// zet filterlaag
+            //// schuif menu-lijst naar binnen
+            //links = -200;  //TODO nog uitlezen uit menuschuif-breedte
+            //let timer = setInterval(function () {
+            //    if (links > -1) clearInterval(timer);
+            //    else {
+            //        links += 20;
+            //        document.getElementById("menuschuif").style.left = links + "px";
+            //    }
+            //},20)
+        }
+
+        function testklik(el, test) {
+            alert("PPPP");
+            alert(el.getAttribute("data-test"));
+            alert(test);
+        }
+
+        function toonPagina(id) {
+            menu_Onderwerpen(); // filter en menu wegschuiven
+            document.getElementById("actuelepagina").innerHTML = document.getElementById(id).outerHTML;
+            var breedte = document.getElementById("main").offsetWidth;
+            document.getElementById("actuelepagina").style.width = breedte + "px";
+            document.getElementById("actuelepagina").style.left = breedte + "px";
+            document.getElementById("actuelepagina").style.right = (-breedte) + "px";
+            document.getElementById("actuelepagina").style.display = "block";
+            links = breedte;
+            let timer = setInterval(function () {
+                if (links < 1) {
+                    clearInterval(timer);
+                    document.getElementById("actuelepagina").style.left = "0px";
+                    document.getElementById("actuelepagina").style.rechts = "0px";
+                }
+                else {
+                    links -= breedte / 10;
+                    document.getElementById("actuelepagina").style.left = links + "px";
+                    document.getElementById("actuelepagina").style.rechts = (-links) + "px";
+                }
+            }, 20)
+            var elem = document.getElementById('mySwipe');
+            window.mynSwipe = Swipe(elem, {
+                // startSlide: 4,
+                // auto: 3000,
+                // continuous: true,
+                // disableScroll: true,
+                // stopPropagation: true,
+                // callback: function(index, element) {},
+                // transitionEnd: function(index, element) {}
+            });
+
+        }
+    </script>
+    <script src="js/main.js"></script>
+    <div id="bibliotheek" style="display: none">
+        <div id="menu_1" class="volledig menu">
+            <p class="menuKop" style="font-size:200%" data-test="ProbeerIets" onclick="testklik(this, 'proberen')">Testmenu</p>
+            <p class="menuItem" onclick="toonPagina('receptenPagina')">Recepten</p>
+            <p class="menuItem">Markerwadden</p>
+        </div>
+
+        <div id="receptenPagina" class="volledig">
+            <div class="volledig navigatiebalk">
+                <button id="TESTJE" onclick="menu_Onderwerpen(this)">...</button>
+                RECEPTEN
+            </div>
+            <div class="volledig content">
+                <div id='mySwipe' style='max-width:5000px;margin:0 auto' class='swipe'>
+                    <div class='swipe-wrap'>
+                        <div><b>0</b></div>
+                        <div><b>1</b></div>
+                        <div><b>2</b></div>
+                        <div><b>3</b></div>
+                        <div><b>4</b></div>
+                        <div><b>5</b></div>
+                        <div><b>6</b></div>
+                        <div><b>7</b></div>
+                        <div><b>8</b></div>
+                        <div><b>9</b></div>
+                        <div><b>10</b></div>
+                        <div><b>11</b></div>
+                        <div><b>12</b></div>
+                        <div><b>13</b></div>
+                        <div><b>14</b></div>
+                        <div><b>15</b></div>
+                        <div><b>16</b></div>
+                        <div><b>17</b></div>
+                        <div><b>18</b></div>
+                        <div><b>19</b></div>
+                        <div><b>20</b></div>
+                    </div>
+                </div>
+
+
+
+                <div style='text-align:center;padding-top:20px;'>
+
+                    <button onclick='mynSwipe.prev()'>prev</button>
+                    <button onclick='mynSwipe.next()'>next</button>
+
+                </div>
+
+            </div>
+            <div class="volledig voetbalk">RECEPTEN VOETBALK</div>
+        </div>
+
+
+
+    </div>
+    <script src='swipe.js'></script>
+    <script>
+
+        // pure JS
+        var elem = document.getElementById('mySwipe');
+        window.mynSwipe = Swipe(elem, {
+            // startSlide: 4,
+            // auto: 3000,
+            // continuous: true,
+            // disableScroll: true,
+            // stopPropagation: true,
+            // callback: function(index, element) {},
+            // transitionEnd: function(index, element) {}
+        });
+    </script>
+
+</body >
+
+</html >
